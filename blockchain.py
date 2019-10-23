@@ -6,42 +6,47 @@ import json
 from hash_util import hash_string_256, hash_block
 
 MINING_REWARD=10
-genesis_block = {
-    'previous_hash': '',
-    'index': 0,
-    'transactions': [],
-    'proof': 100
-}
-blockchain = [genesis_block]
+blockchain = []
 open_transactions = []
 owner = 'Arnaud'
 participants={'Arnaud'}
 
 def load_data():
-    with open('blockchain.txt',mode='r') as f:
-        content=f.readlines()
-        global blockchain
-        global open_transactions
-        blockchain=json.loads(content[0][:-1])
-        blockchain=[{'previous_hash': block['previous_hash'],'index': block['index'],'proof': block['proof'],'transactions':[OrderedDict([('sender',tx['sender']),('recipient',tx['recipient']),('amount',tx['amount'])]) for tx in block['transactions']]} for block in blockchain]
-        open_transactions=json.loads(content[1])
-        open_transactions=[OrderedDict([('sender',tx['sender']),('recipient',tx['recipient']),('amount',tx['amount'])]) for tx in open_transactions]
+    global blockchain
+    global open_transactions
+    try:
+        with open('blockchain.txt',mode='r') as f:
+            content=f.readlines()
+            blockchain=json.loads(content[0][:-1])
+            blockchain=[{'previous_hash': block['previous_hash'],'index': block['index'],'proof': block['proof'],'transactions':[OrderedDict([('sender',tx['sender']),('recipient',tx['recipient']),('amount',tx['amount'])]) for tx in block['transactions']]} for block in blockchain]
+            open_transactions=json.loads(content[1])
+            open_transactions=[OrderedDict([('sender',tx['sender']),('recipient',tx['recipient']),('amount',tx['amount'])]) for tx in open_transactions]
+    except (IOError,IndexError):
+        genesis_block = {
+            'previous_hash': '',
+            'index': 0,
+            'transactions': [],
+            'proof': 100
+        }
+        blockchain = [genesis_block]
+        open_transactions = []
 
 load_data()
 
 
 def save_data():
-    with open('blockchain.txt',mode='w') as f:
-        f.write(json.dumps(blockchain))
-        f.write('\n')
-        f.write(json.dumps(open_transactions))
+    try:
+        with open('blockchain.txt',mode='w') as f:
+            f.write(json.dumps(blockchain))
+            f.write('\n')
+            f.write(json.dumps(open_transactions))
+    except IOError:
+        print('Saving failed!')
 
 
 def valid_proof(transactions, last_hash, proof):
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
-    print(guess)
     guess_hash = hash_string_256(guess)
-    print(guess_hash)
     return guess_hash[:2]=='00'
 
 
