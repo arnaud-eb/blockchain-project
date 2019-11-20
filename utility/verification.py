@@ -1,22 +1,27 @@
-from hash_util import hash_string_256, hash_block
+"""Provides verification helper methods."""
+
+from .hash_util import hash_string_256, hash_block
+from wallet import Wallet
 
 
 class Verification:
 
     @staticmethod
     def valid_proof(transactions, last_hash, proof):
-        guess = (str([tx.to_ordered_dict() for tx in transactions]
-                     ) + str(last_hash) + str(proof)).encode()
+        guess = (str([tx.to_ordered_dict() for tx in transactions]) + str(last_hash) + str(proof)).encode()
         guess_hash = hash_string_256(guess)
         return guess_hash[:2] == '00'
 
     @staticmethod
-    def verify_transaction(transaction, get_balance):
-        return get_balance() >= transaction.amount
+    def verify_transaction(transaction,get_balance,check_funds=True):
+        if check_funds:
+            return get_balance() >= transaction.amount and Wallet.verify_transaction(transaction)
+        else:
+            return Wallet.verify_transaction(transaction)
 
     @classmethod
     def verify_transactions(cls, get_balance, open_transactions):
-        return all([cls.verify_transaction(tx, get_balance) for tx in open_transactions])
+        return all([cls.verify_transaction(tx,get_balance,False) for tx in open_transactions])
 
     @classmethod
     def verify_blockchain(cls, blockchain):
