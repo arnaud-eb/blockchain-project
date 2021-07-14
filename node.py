@@ -88,10 +88,9 @@ def broadcast_transaction():
         values['signature'],
         values['amount'],
         True)
-    if success is not None:
+    if success:
         response = {
-            'message': 'Transaction added successfully.',
-            'transaction': success.__dict__
+            'message': 'Transaction added successfully.'
         }
         return jsonify(response), 201
     else:
@@ -150,10 +149,9 @@ def add_transaction():
         wallet.public_key, values['recipient'], values['amount'])
     transaction = blockchain.add_transaction(
         values['recipient'], wallet.public_key, signature, values['amount'])
-    if transaction is None:
+    if transaction:
         response = {
             'message': 'Transaction added successfully.',
-            'transaction': transaction.__dict__,
             'funds': round(blockchain.get_balance(), 2)
         }
         return jsonify(response), 201

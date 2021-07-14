@@ -146,11 +146,10 @@ class Blockchain:
                         if (response.status_code == 400
                                 or response.status_code == 500):
                             print('Transaction declined, needs resolving')
-                            return None
                     except requests.exceptions.ConnectionError:
                         continue
-            return transaction
-        return None
+            return True
+        return False
 
     def mine_block(self):
         if self.public_key is None:

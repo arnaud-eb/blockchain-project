@@ -1,6 +1,6 @@
 {
-    "python.pythonPath": "C:\\Users\\Arnaud\\Anaconda3\\envs\\pycoin\\python.exe",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
-    "python.linting.pycodestyleEnabled": true
+    "python.linting.pycodestyleEnabled": true,
+    "python.pythonPath": "C:\\Users\\Arnaud\\Anaconda3\\envs\\pycoin\\python.exe"
 }
