@@ -1,6 +1,6 @@
 Flask
 Flask-Cors
 requests
-pycrypto
+pycryptodome
 flask-heroku
 gunicorn
