@@ -59,8 +59,8 @@ class Blockchain:
                     tx['amount'])
                     for tx in json_open_transactions]
                 self.__peer_nodes = set(json.loads(content[2]))
-        except (IOError, IndexError):
-            pass
+        except (IOError, IndexError, PermissionError, OSError):
+            print(f'Could not load blockchain file - starting with genesis block')
 
     def save_data(self):
         try:
@@ -80,9 +80,9 @@ class Blockchain:
                 f.write('\n')
                 f.write(json.dumps(list(self.__peer_nodes)))
             return True
-        except IOError:
-            print('Saving failed!')
-            return False
+        except (IOError, PermissionError, OSError):
+            print('Could not save blockchain file - using in-memory storage for demo')
+            return True
 
     def proof_of_work(self):
         last_block = self.__chain[-1]

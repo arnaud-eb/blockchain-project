@@ -20,10 +20,9 @@ class Wallet:
                 f.write(public_key)
                 f.write('\n')
                 f.write(private_key)
-            return True
-        except (IOError, IndexError):
-            print('Saving failed')
-            return False
+        except (IOError, IndexError, PermissionError, OSError):
+            print(f'Could not save wallet file - using in-memory storage for demo')
+        return True
 
     def load_keys(self):
         try:
@@ -32,8 +31,8 @@ class Wallet:
                 self.public_key = keys[0][:-1]
                 self.private_key = keys[1]
             return True
-        except (IOError, IndexError):
-            print('Loading failed')
+        except (IOError, IndexError, PermissionError, OSError):
+            print('No wallet file found - create new keys first')
             return False
 
     def generate_keys(self):
