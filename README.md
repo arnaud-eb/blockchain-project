@@ -4,7 +4,7 @@ A fully functional blockchain cryptocurrency system built with Python and Flask,
 
 ## 🚀 Live Demo
 
-*[Live demo link will be added after deployment]*
+**[Try the live blockchain app →](https://blockchain-project-5vkm.onrender.com/)**
 
 ## ✨ Features
 
