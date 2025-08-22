@@ -8,6 +8,12 @@ from block import Block
 app = Flask(__name__)
 CORS(app)
 
+# Initialize for deployment (Gunicorn)
+import os
+port = int(os.environ.get('PORT', 5000))
+wallet = Wallet(port)
+blockchain = Blockchain(wallet.public_key, port)
+
 
 @app.route('/', methods=['GET'])
 def get_node_ui():
