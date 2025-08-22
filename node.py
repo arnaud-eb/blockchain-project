@@ -21,18 +21,27 @@ def get_network():
 
 @app.route('/wallet', methods=['POST'])
 def create_keys():
-    if wallet.create_keys():
-        global blockchain
-        blockchain = Blockchain(wallet.public_key, port)
+    try:
+        if wallet.create_keys():
+            global blockchain
+            blockchain = Blockchain(wallet.public_key, port)
+            response = {
+                'public_key': wallet.public_key,
+                'private_key': wallet.private_key,
+                'funds': round(blockchain.get_balance(), 2)
+            }
+            return jsonify(response), 201
+        else:
+            response = {
+                'message': 'Saving the keys failed.'
+            }
+            return jsonify(response), 500
+    except Exception as e:
+        print(f"ERROR in create_keys: {str(e)}")
+        import traceback
+        traceback.print_exc()
         response = {
-            'public_key': wallet.public_key,
-            'private_key': wallet.private_key,
-            'funds': round(blockchain.get_balance(), 2)
-        }
-        return jsonify(response), 201
-    else:
-        response = {
-            'message': 'Saving the keys failed.'
+            'message': f'Server error: {str(e)}'
         }
         return jsonify(response), 500
 
