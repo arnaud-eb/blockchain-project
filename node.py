@@ -289,9 +289,10 @@ def get_peer_nodes():
 
 
 if __name__ == '__main__':
+    import os
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=5000)
+    parser.add_argument('-p', '--port', type=int, default=int(os.environ.get('PORT', 5000)))
     args = parser.parse_args()
     port = args.port
     wallet = Wallet(port)
